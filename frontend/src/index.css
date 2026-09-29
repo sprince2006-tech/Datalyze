@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+@layer components {
+  .fade-up { animation: fadeUp .25s ease forwards; }
+
+  .wp-card { @apply bg-white border border-gray-200 rounded-lg shadow-sm; }
+  .wp-card-header {
+    @apply px-4 py-3 border-b border-gray-100 font-semibold text-sm text-gray-900 flex items-center justify-between;
+  }
+  .wp-table { @apply w-full border-collapse; }
+  .wp-table th {
+    @apply text-left px-2.5 py-2 border-b border-gray-200 font-semibold text-gray-500 text-[11px] uppercase tracking-wide;
+  }
+  .wp-table td { @apply px-2.5 py-2.5 border-b border-gray-50 text-[13px] text-gray-900; }
+  .wp-table tr:hover td { @apply bg-gray-50; }
+
+  .wp-input {
+    @apply w-full px-2.5 py-2 border border-gray-300 rounded-md text-sm text-gray-900 bg-white outline-none transition-colors;
+  }
+  .wp-input:focus { @apply border-brand ring-1 ring-brand; }
+  .wp-input:disabled { @apply bg-gray-50 text-gray-400 cursor-not-allowed; }
+  .wp-input::placeholder { @apply text-gray-400; }
+
+  .btn-wp {
+    @apply inline-flex items-center gap-1.5 px-3.5 py-1.5 text-[13px] font-semibold rounded-md
+           bg-brand text-white cursor-pointer transition-colors no-underline;
+  }
+  .btn-wp:hover { @apply bg-brand-dark; }
+  .btn-wp:disabled { @apply opacity-60 cursor-not-allowed; }
+  .btn-wp-secondary { @apply bg-gray-100 text-gray-700 border border-gray-200; }
+  .btn-wp-secondary:hover { @apply bg-gray-200; }
+  .btn-wp-danger { @apply bg-red-50 text-red-600 border border-red-200; }
+  .btn-wp-danger:hover { @apply bg-red-100; }
+
+  .badge { @apply inline-block px-2 py-0.5 rounded-full text-[11px] font-semibold; }
+  .badge-ready      { @apply bg-green-50 text-green-600; }
+  .badge-processing { @apply bg-yellow-50 text-amber-600; }
+  .badge-error      { @apply bg-red-50 text-red-600; }
+  .badge-numeric    { @apply bg-blue-50 text-blue-600; }
+  .badge-string     { @apply bg-emerald-50 text-emerald-600; }
+  .badge-date       { @apply bg-yellow-50 text-amber-600; }
+  .badge-boolean    { @apply bg-purple-50 text-purple-600; }
+  .badge-category   { @apply bg-emerald-50 text-emerald-600; }
+  .badge-id         { @apply bg-gray-100 text-gray-500; }
+  .badge-text       { @apply bg-violet-50 text-violet-600; }
+  .badge-empty      { @apply bg-gray-50 text-gray-400; }
+
+  .notice {
+    @apply border-l-4 border-brand bg-white px-4 py-2.5 rounded-r-md mb-3;
+  }
+  .notice-success { @apply border-l-green-600; }
+  .notice-error   { @apply border-l-red-600; }
+
+  .spinner {
+    @apply inline-block w-4 h-4 rounded-full border-2 border-gray-200 border-t-brand animate-spin;
+  }
+}
