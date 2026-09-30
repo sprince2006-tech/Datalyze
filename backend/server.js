@@ -1,5 +1,4 @@
 require('dotenv').config();
-const path = require('path');
 const http = require('http');
 const express = require('express');
 const cors = require('cors');
@@ -31,7 +30,10 @@ const server = http.createServer(app);
 
 // ── Socket.IO ───────────────────────────────────────────────────────
 const io = new Server(server, {
-  cors: { origin: (process.env.CORS_ORIGINS || 'http://localhost:3000').split(','), credentials: true },
+  cors: {
+    origin: (process.env.CORS_ORIGINS || 'http://localhost:3000').split(','),
+    credentials: true,
+  },
 });
 
 io.on('connection', (socket) => {
@@ -75,25 +77,16 @@ app.use('/api/upload',  uploadRoutes);
 app.use('/api/public',  publicRoutes);
 app.use('/api/reports', reportRoutes);
 
-app.get('/api/health', (_req, res) => res.json({ ok: true, time: new Date().toISOString() }));
+app.get('/api/health', (_req, res) => {
+  res.json({ ok: true, time: new Date().toISOString() });
+});
 
-// ── Production static frontend ──────────────────────────────────────
-if (process.env.NODE_ENV === 'production') {
-  const dist = path.resolve(__dirname, '../frontend/dist');
-  app.use(express.static(dist, {
-    setHeaders(res, filePath) {
-      if (filePath.includes('/assets/')) {
-        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-      }
-    },
-  }));
-  app.get('*', (req, res, next) => {
-    if (req.path.startsWith('/api')) return next();
-    res.sendFile(path.join(dist, 'index.html'));
-  });
-}
+// ── 404 for unmatched routes ────────────────────────────────────────
+app.use((_req, res) => {
+  res.status(404).json({ success: false, message: 'Not found' });
+});
 
-// ── Error handler (last) ────────────────────────────────────────────
+// ── Error handler (must be last) ────────────────────────────────────
 app.use(errorHandler);
 
 // ── Boot ────────────────────────────────────────────────────────────

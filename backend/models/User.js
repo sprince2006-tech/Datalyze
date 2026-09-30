@@ -24,8 +24,6 @@ const userSchema = new mongoose.Schema({
   isActive: { type: Boolean, default: true },
 }, { timestamps: true });
 
-userSchema.index({ email: 1 }, { unique: true });
-
 userSchema.pre('save', async function () {
   if (!this.isModified('password')) return;
   if (!this.password) return; // Google user without password
