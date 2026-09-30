@@ -79,6 +79,65 @@ function PreviewDonut() {
   );
 }
 
+/* Dashboard preview — used on both desktop and mobile */
+function DashboardPreview() {
+  return (
+    <div className="relative mt-12 lg:mt-0">
+      <div className="absolute -inset-6 lg:-inset-8 bg-gradient-to-br from-brand/10 via-transparent to-blue-500/10 rounded-3xl blur-3xl" />
+
+      <div className="relative bg-white rounded-2xl border border-gray-200 shadow-[0_24px_70px_-24px_rgba(0,0,0,0.18)] p-4 sm:p-5 space-y-3 sm:space-y-4 mx-auto max-w-md lg:max-w-none">
+        <div className="flex items-center gap-1.5 pb-3 border-b border-gray-100">
+          <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
+          <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+          <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+          <span className="ml-3 text-[11px] font-medium text-gray-400">
+            datalyze · dashboard
+          </span>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
+          {[
+            { l: 'Revenue', v: '$134K' },
+            { l: 'Profit',  v: '$40.7K' },
+            { l: 'Orders',  v: '1,000' },
+          ].map((k) => (
+            <div key={k.l} className="rounded-lg border border-gray-100 bg-gray-50/70 p-2.5 sm:p-3">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider m-0 mb-1">
+                {k.l}
+              </p>
+              <p className="text-[15px] sm:text-[17px] font-extrabold text-gray-900 leading-none m-0">
+                {k.v}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
+          <div className="rounded-lg border border-gray-100 bg-white p-2.5 sm:p-3 col-span-2 flex flex-col">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider m-0 mb-2">
+              Revenue trend
+            </p>
+            <div className="h-[64px] sm:h-[72px]"><PreviewLine /></div>
+          </div>
+          <div className="rounded-lg border border-gray-100 bg-white p-2.5 sm:p-3 flex flex-col">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider m-0 mb-2">
+              Split
+            </p>
+            <div className="h-[64px] sm:h-[72px]"><PreviewDonut /></div>
+          </div>
+        </div>
+
+        <div className="rounded-lg border border-gray-100 bg-white p-2.5 sm:p-3 flex flex-col">
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider m-0 mb-2">
+            Top categories
+          </p>
+          <div className="h-[64px] sm:h-[72px]"><PreviewBars /></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function HomePage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -86,8 +145,6 @@ export default function HomePage() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
 
-  // Where the user is right now — passed to Login/Register so their
-  // back button and post-login redirect both return them here.
   const here = location.pathname || '/';
 
   const onDrop = useCallback(async (accepted) => {
@@ -126,7 +183,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white flex flex-col antialiased">
 
-      <section className="min-h-screen flex flex-col">
+      <section className="lg:min-h-screen flex flex-col">
         <nav className="shrink-0 px-6 md:px-12 h-16 flex items-center justify-between">
           <Logo size={30} />
           <div className="flex items-center gap-2">
@@ -162,8 +219,8 @@ export default function HomePage() {
             <div className="absolute -bottom-32 -left-32 w-[440px] h-[440px] rounded-full bg-blue-500/[0.05] blur-3xl" />
           </div>
 
-          <div className="relative max-w-6xl mx-auto px-6 md:px-12 h-full flex items-center py-10">
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full">
+          <div className="relative max-w-6xl mx-auto px-6 md:px-12 lg:h-full flex items-center py-10">
+            <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center w-full">
 
               <div>
                 <h1 className="text-[40px] md:text-[56px] lg:text-[60px] font-extrabold text-gray-900 leading-[1.04] tracking-tight mb-8">
@@ -227,60 +284,16 @@ export default function HomePage() {
                     </span>
                   </div>
                 </div>
+
+                {/* Preview is placed here for mobile — inside the left column so it stacks below the CTA */}
+                <div className="lg:hidden">
+                  <DashboardPreview />
+                </div>
               </div>
 
-              <div className="relative hidden lg:block">
-                <div className="absolute -inset-8 bg-gradient-to-br from-brand/10 via-transparent to-blue-500/10 rounded-3xl blur-3xl" />
-
-                <div className="relative bg-white rounded-2xl border border-gray-200 shadow-[0_24px_70px_-24px_rgba(0,0,0,0.18)] p-5 space-y-4">
-                  <div className="flex items-center gap-1.5 pb-3 border-b border-gray-100">
-                    <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
-                    <span className="ml-3 text-[11px] font-medium text-gray-400">
-                      datalyze · dashboard
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-3">
-                    {[
-                      { l: 'Revenue', v: '$134K' },
-                      { l: 'Profit',  v: '$40.7K' },
-                      { l: 'Orders',  v: '1,000' },
-                    ].map((k) => (
-                      <div key={k.l} className="rounded-lg border border-gray-100 bg-gray-50/70 p-3">
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider m-0 mb-1">
-                          {k.l}
-                        </p>
-                        <p className="text-[17px] font-extrabold text-gray-900 leading-none m-0">
-                          {k.v}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-3">
-                    <div className="rounded-lg border border-gray-100 bg-white p-3 col-span-2 flex flex-col">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider m-0 mb-2">
-                        Revenue trend
-                      </p>
-                      <div className="h-[72px]"><PreviewLine /></div>
-                    </div>
-                    <div className="rounded-lg border border-gray-100 bg-white p-3 flex flex-col">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider m-0 mb-2">
-                        Split
-                      </p>
-                      <div className="h-[72px]"><PreviewDonut /></div>
-                    </div>
-                  </div>
-
-                  <div className="rounded-lg border border-gray-100 bg-white p-3 flex flex-col">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider m-0 mb-2">
-                      Top categories
-                    </p>
-                    <div className="h-[72px]"><PreviewBars /></div>
-                  </div>
-                </div>
+              {/* Preview on desktop — right column */}
+              <div className="hidden lg:block">
+                <DashboardPreview />
               </div>
 
             </div>
