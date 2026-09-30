@@ -16,7 +16,7 @@ const NAV = [
   { to: '/dashboard/settings',  label: 'Settings',  icon: Settings },
 ];
 
-function SidebarContent({ user, onNavigate, onClose }) {
+function SidebarContent({ user, onNavigate, onClose, onLogout }) {
   const initials =
     user?.name?.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2) || 'U';
 
@@ -66,7 +66,7 @@ function SidebarContent({ user, onNavigate, onClose }) {
         </div>
         <button
           className="text-gray-400 hover:text-white"
-          onClick={() => { onNavigate?.(); onClose?.(); }}
+          onClick={onLogout}
           title="Logout"
         >
           <LogOut size={14} />
@@ -82,12 +82,10 @@ export default function Layout() {
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // Close the drawer whenever the route changes
   useEffect(() => {
     setDrawerOpen(false);
   }, [location.pathname]);
 
-  // Prevent body scroll while drawer is open
   useEffect(() => {
     if (!drawerOpen) return undefined;
     const prev = document.body.style.overflow;
@@ -95,7 +93,6 @@ export default function Layout() {
     return () => { document.body.style.overflow = prev; };
   }, [drawerOpen]);
 
-  // Close on Escape
   useEffect(() => {
     if (!drawerOpen) return undefined;
     const onKey = (e) => { if (e.key === 'Escape') setDrawerOpen(false); };
@@ -108,39 +105,41 @@ export default function Layout() {
     navigate('/');
   };
 
+  const closeDrawer = () => setDrawerOpen(false);
+
   return (
     <div className="flex min-h-screen bg-gray-50">
 
-      {/* ── Desktop sidebar ─────────────────────────────────────── */}
+      {/* Desktop sidebar */}
       <aside className="hidden md:flex w-56 flex-col bg-gray-800 fixed top-0 left-0 h-screen z-30">
-        <SidebarContent user={user} onNavigate={handleLogout} />
+        <SidebarContent
+          user={user}
+          onLogout={handleLogout}
+        />
       </aside>
 
-      {/* ── Mobile drawer ───────────────────────────────────────── */}
+      {/* Mobile drawer */}
       {drawerOpen && (
         <>
-          {/* Backdrop */}
           <div
-            onClick={() => setDrawerOpen(false)}
+            onClick={closeDrawer}
             className="fixed inset-0 bg-black/50 z-40 md:hidden"
             aria-hidden="true"
           />
-
-          {/* Drawer panel */}
           <aside className="fixed top-0 left-0 h-screen w-64 max-w-[80vw] bg-gray-800 flex flex-col z-50 md:hidden">
             <SidebarContent
               user={user}
-              onNavigate={handleLogout}
-              onClose={() => setDrawerOpen(false)}
+              onNavigate={closeDrawer}
+              onClose={closeDrawer}
+              onLogout={handleLogout}
             />
           </aside>
         </>
       )}
 
-      {/* ── Main content ────────────────────────────────────────── */}
+      {/* Main content */}
       <div className="flex-1 md:ml-56 flex flex-col min-w-0">
         <header className="bg-gray-900 text-gray-400 h-10 md:h-8 px-3 md:px-4 flex items-center gap-3 md:gap-4 text-xs shrink-0">
-          {/* Hamburger — mobile only */}
           <button
             onClick={() => setDrawerOpen(true)}
             className="md:hidden text-gray-300 hover:text-white p-1 -ml-1"
